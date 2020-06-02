@@ -184,33 +184,27 @@ function guess() {
 
 // This is the display for the results page.
 function results() {
-	let goodScore = 'You really know your games!';
+	let goodScore = 'You really know your trivia!';
 	let okayScore = 'Try again and see if you can do better!';
 	let badScore = 'This quiz was not meant for you.';
 	let scoreMessage = "If you're seeing this, there's an error.";
 
-	let goodImage = 'images/thumbsup.png';
-	let okayImage = 'images/restarting.png';
-	let badImage = 'images/slain.png';
 	let resultImage = "If you're seeing this, there's an error.";
 
-	let goodImageAlt = 'Thumbs Up Sonic';
-	let okayImageAlt = 'Restart the Test Portal';
-	let badImageAlt = 'Slain Game Over Screen';
 	let resultImageAlt = 'Picture based on score';
 
 	if (correctAnswers > STORE.length * 0.7) {
 		scoreMessage = goodScore;
 		resultImage = 'images/thumbsup.png';
-		resultImageAlt = 'Thumbs Up Sonic';
+		resultImageAlt = 'Celebrate';
 	} else if (correctAnswers > STORE.length * 0.4) {
 		scoreMessage = okayScore;
 		resultImage = 'images/restarting.png';
-		resultImageAlt = 'Restart the Test Portal';
+		resultImageAlt = 'Thumbs Up';
 	} else {
 		scoreMessage = badScore;
 		resultImage = 'images/slain.png';
-		resultImageAlt = 'Slain Game Over Screen';
+		resultImageAlt = 'Thumbs Down';
 	}
 
 	const resultBox = `

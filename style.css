@@ -118,4 +118,14 @@ img {
 	h2 {
 		font-size: 25px;
 	}
+
+	.box {
+		width: 95%;
+	}
+}
+
+@media screen and (max-width: 900px) {
+	.box {
+		width: 75%;
+	}
 }

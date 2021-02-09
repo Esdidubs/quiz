@@ -1,4 +1,4 @@
-# Book Analysis
+# Quiz App
 
 [Live Page](https://esdidubs.github.io/quiz/)
 

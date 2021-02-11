@@ -13,21 +13,31 @@ window.onload = function(){ buttons() };
 // All of the button press options
 function buttons() {
 	$('.box').on('click', '#begin', function() {
+
+		// stops button from reloading page
 		event.preventDefault();
+
+		// grabs the number of questions from the input
 		let numQ = $('#numQ').val();
+
 		let diff = '';
 		let cat = '';
+
+		// if difficulty isn't specified, we don't want a string messing up url
 		if ($('#difficulty').val() === 'any') {
 			diff = '';
 		} else {
 			diff = `&difficulty=${$('#difficulty').val()}`;
 		}
+
+		// if category isn't specified, we don't want a string messing up url
 		if ($('#category').val() === 'any') {
 			diff = '';
 		} else {
 			diff = `&category=${$('#category').val()}`;
 		}
 
+		// this is the specified url format by the api
 		let url = `https://opentdb.com/api.php?amount=${numQ}&type=multiple${diff}${cat}`;
 		createQuestions(url);
 	});
@@ -44,7 +54,10 @@ function buttons() {
 
 	$('.box').on('click', '#restart', function() {
 		event.preventDefault();
+
+		// wipe the questions before game starts again
 		STORE = [];
+
 		restartQuiz();
 	});
 }
@@ -57,18 +70,24 @@ function createQuestions(url) {
 		.catch((error) => alert(error));
 }
 
-
+// creates the array of questions using the JSON data
 function createArr(data) {
 	for (let question in data.results) {
+
+		// creates an array of the potential answers
 		let arr = [];
 		arr.push(data.results[question].correct_answer);
 		arr.push(data.results[question].incorrect_answers[0]);
 		arr.push(data.results[question].incorrect_answers[1]);
 		arr.push(data.results[question].incorrect_answers[2]);
+
+		// jumbles up the order of the answers
 		for (let i = arr.length - 1; i > 0; i--) {
 			let j = Math.floor(Math.random() * (i + 1));
 			[ arr[i], arr[j] ] = [ arr[j], arr[i] ];
 		}
+
+		// makes an object containing the question, array of potential answers, and actual answer
 		let newObj = {
 			question    : data.results[question].question,
 			answers     : arr,
@@ -114,10 +133,12 @@ function renderQuestion() {
 
 // Handles when someone guesses an answer
 function handleGuess() {
+
 	// Checks to see if an option is checked
 	if ($("input[name='answer']:checked").data('value')) {
 		guess();
 	} else {
+
 		// Shows the error message if nothing is checked
 		if ($('#error').hasClass('hidden')) {
 			$('#error').toggleClass('hidden');
@@ -130,9 +151,11 @@ function guess() {
 	if (!$('#error').hasClass('hidden')) {
 		$('#error').toggleClass('hidden');
 	}
+
+	// disables ability to guess again on current question
 	$('input[type=radio]').attr('disabled', true);
 
-	// had to add this because there were issues with questions having apostrophes etc
+	// had to add this because there were issues with questions having apostrophes etc for comparing answers
 	let encodedStr = STORE[currentQuestion].rightAnswer;
 	let parser = new DOMParser();
 	let dom = parser.parseFromString('<!doctype html><body>' + encodedStr, 'text/html');
@@ -173,9 +196,13 @@ function handleNext() {
 
 // This is the display for the results page.
 function results() {
+
+	// messages given based on score
 	let goodScore = 'You really know your trivia!';
 	let okayScore = 'Try again and see if you can do better!';
 	let badScore = 'This quiz was not meant for you.';
+
+	// messages if there are any errors in rendering the site
 	let scoreMessage = "If you're seeing this, there's an error.";
 	let resultImage = "If you're seeing this, there's an error.";
 	let resultImageAlt = 'Picture based on score';

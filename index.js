@@ -20,8 +20,8 @@ function buttons() {
 		// grabs the number of questions from the input
 		let numQ = $('#numQ').val();
 
-		let diff = '';
-		let cat = '';
+		let diff;
+		let cat;
 
 		// if difficulty isn't specified, we don't want a string messing up url
 		if ($('#difficulty').val() === 'any') {
@@ -32,14 +32,15 @@ function buttons() {
 
 		// if category isn't specified, we don't want a string messing up url
 		if ($('#category').val() === 'any') {
-			diff = '';
+			cat = '';
 		} else {
-			diff = `&category=${$('#category').val()}`;
+			cat = `&category=${$('#category').val()}`;
 		}
 
-		// this is the specified url format by the api
-		let url = `https://opentdb.com/api.php?amount=${numQ}&type=multiple${diff}${cat}`;
-		createQuestions(url);
+		// Lets user know the quiz is loading and prevents them from clicking twice
+		$('#begin').replaceWith(`<p>Loading...</p>`);
+	
+		createQuestions(numQ, diff, cat);
 	});
 
 	$('.box').on('click', '#next', function() {
@@ -62,12 +63,26 @@ function buttons() {
 	});
 }
 
-// Uses fetch to utilize the API and sends the JSON data to the createArr function
-function createQuestions(url) {
+// Uses fetch to utilize the API and sends the JSON data to the testData function
+function createQuestions(numQ, diff, cat) {
+
+	let url = `https://opentdb.com/api.php?amount=${numQ}&type=multiple${diff}${cat}`;
+
 	fetch(url)
 		.then((response) => response.json())
-		.then((responseJson) => createArr(responseJson))
+		.then((responseJson) => testData(responseJson, numQ, diff, cat))
 		.catch((error) => alert(error));
+}
+
+// This makes sure the API has enough questions for requested specifications
+function testData(data, numQ, diff, cat) {
+	if(data.response_code === 0){
+		createArr(data);
+	}
+	else {
+		numQ--;
+		createQuestions(numQ, diff, cat);
+	}
 }
 
 // creates the array of questions using the JSON data
